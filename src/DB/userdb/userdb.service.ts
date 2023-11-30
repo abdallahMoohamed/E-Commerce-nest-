@@ -14,4 +14,8 @@ export class UserdbService {
   async findOne (object: any): Promise<User> {
     return await this.userModel.findOne(object)
   }
+
+  async findOneAndUpdate (filter: any, update: any, option?: any): Promise<User> {
+    return await this.userModel.findOneAndUpdate(filter, update, option)
+  }
 }

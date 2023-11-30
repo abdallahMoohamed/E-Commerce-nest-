@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, HttpException } from '@nestjs/common';
+import { Injectable, ConflictException, HttpException, NotFoundException } from '@nestjs/common';
 import { UserdbService } from 'src/DB/userdb/userdb.service';
 import * as bcrypt from 'bcrypt'
 import * as crypto from 'crypto'
@@ -31,12 +31,24 @@ export class UserService {
     })
 
     // create confirmationLink
-    const link = `http://localhost:${process.env.PORT}/auth/confirmEmail/${activationCode}`
+    const link = `http://localhost:${process.env.PORT}/user/confirmEmail/${activationCode}`
     //send email
     const isSent = await this._emailService.sendEmail(email, "activate account", `Confirm Email with link :${link}`);
     // return response 
     if (!isSent) throw new HttpException('In-valid Email', 500)
     return { success: true, message: "Review your email" }
+  }
+
+  async activateAccount (params: any) {
+    //find and update user 
+    const user = await this._userModel.findOneAndUpdate(
+      { activationCode: params.activationCode },
+      { isConfirmed: true, $unset: { activationCode: 1 } }
+    )
+    if (!user) throw new NotFoundException('User not found ')
+    //create a cart TODO
+    // return response 
+    return { success: true, message: 'Your account is now activated!' }
   }
 
 }

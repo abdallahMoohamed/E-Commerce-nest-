@@ -1,7 +1,7 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JoivalidationPipe } from 'src/pipes/joivalidation/joivalidation.pipe';
-import { signUpSchema } from './user.joi';
+import { activateAccountSchema, signUpSchema } from './user.joi';
 
 @Controller('user')
 export class UserController {
@@ -15,8 +15,12 @@ export class UserController {
   }
 
   // activate Account
+  @Get('confirmEmail/:activationCode')
+  @UsePipes(new JoivalidationPipe(activateAccountSchema))
+  activateAccount (@Param() param: any) {
+    return this._userService.activateAccount(param)
+  }
 
-  
 
   // login
 
