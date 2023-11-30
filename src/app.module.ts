@@ -8,8 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose'
 import * as dotenv from 'dotenv'
 dotenv.config()
 @Module({
-  imports: [UserModule,MongooseModule.forRoot(`${process.env.DBCONNECTION}/e_commerce`)],
+  imports: [UserModule, MongooseModule.forRoot(`${process.env.DB_CONNECTION}/e_commerce`)],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,12 +1,17 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, HttpException } from '@nestjs/common';
 import { UserdbService } from 'src/DB/userdb/userdb.service';
 import * as bcrypt from 'bcrypt'
+import * as crypto from 'crypto'
 import * as dotenv from 'dotenv'
+import { EmailService } from 'src/email/email.service';
 dotenv.config()
 
 @Injectable()
 export class UserService {
-  constructor (private readonly _userModel: UserdbService) { }
+  constructor (
+    private readonly _userModel: UserdbService,
+    private readonly _emailService: EmailService
+  ) { }
 
   async signUp (body: any) {
     // constructing data 
@@ -18,12 +23,20 @@ export class UserService {
 
     // hashed password 
     const hashedPassword = bcrypt.hashSync(password, parseInt(process.env.SALTPASSWORD))
+    // generate activationCode
+    const activationCode = crypto.randomBytes(64).toString('hex')
     // create user 
     const newUser = await this._userModel.create({
-      userName, email, password: hashedPassword
+      userName, email, password: hashedPassword, activationCode
     })
+
+    // create confirmationLink
+    const link = `http://localhost:${process.env.PORT}/auth/confirmEmail/${activationCode}`
+    //send email
+    const isSent = await this._emailService.sendEmail(email, "activate account", `Confirm Email with link :${link}`);
     // return response 
-    return { success: true, result: newUser }
+    if (!isSent) throw new HttpException('In-valid Email', 500)
+    return { success: true, message: "Review your email" }
   }
 
 }

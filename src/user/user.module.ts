@@ -5,11 +5,12 @@ import { userDBModule } from 'src/DB/userdb/user.schema';
 import { UserdbService } from 'src/DB/userdb/userdb.service';
 import { TokendbService } from 'src/DB/tokendb/tokendb.service';
 import { tokenDBModule } from 'src/DB/tokendb/token.schema';
+import { EmailService } from 'src/email/email.service';
 
 
 @Module({
-  imports: [userDBModule,tokenDBModule],
-  providers: [UserService, UserdbService, TokendbService],
-  controllers: [UserController]
+  imports: [userDBModule, tokenDBModule],
+  controllers: [UserController],
+  providers: [UserService, UserdbService, TokendbService, EmailService]
 })
 export class UserModule { }
