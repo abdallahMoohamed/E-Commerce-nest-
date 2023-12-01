@@ -31,7 +31,7 @@ export const forgetCodeSchema = {
 }
 export const resetPasswordSchema = {
   body: joi.object({
-    code: joi.number().positive().integer().required(),
+    code: joi.string().required(),
     password: joi.string().pattern(new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/)).required(),
     confrimPassword: joi.string().valid(joi.ref('password')).required(),
   }).required()

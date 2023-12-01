@@ -27,7 +27,7 @@ export class User {
   @Prop({ default: false })
   isConfirmed: boolean
 
-  @Prop()
+  @Prop({ unique: true })
   forgetCode: string
 
   @Prop()

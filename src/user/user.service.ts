@@ -96,7 +96,7 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found')
     // generate code 
     const code = randomstring.generate({
-      length: 5,
+      length: 9,
       charset: 'numeric'
     })
     // update user 
@@ -123,7 +123,8 @@ export class UserService {
     await user.save()
 
     // Invalidate tokens
-    const tokens = await this._tokenModel.find({ user: user._id })
+    const userId = JSON.parse(JSON.stringify(user._id)) /* handle user._id */
+    const tokens = await this._tokenModel.find({ user: userId })
     tokens.forEach(async (token) => {
       token.isValid = false
       await token.save()
