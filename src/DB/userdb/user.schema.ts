@@ -1,4 +1,5 @@
 import { Schema, Prop, SchemaFactory, MongooseModule, raw } from "@nestjs/mongoose"
+import { Document } from 'mongoose'
 
 @Schema({ timestamps: true })
 export class User {
@@ -48,6 +49,7 @@ export class User {
 
 }
 
+export type UserDocument = User & Document
 // SchemaFactory
 const userSchema = SchemaFactory.createForClass(User)
 // Module

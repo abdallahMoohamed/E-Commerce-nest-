@@ -1,5 +1,5 @@
 import { Schema, Prop, SchemaFactory, MongooseModule } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import { Types, Document } from "mongoose";
 
 
 // class
@@ -20,6 +20,9 @@ export class Token {
   @Prop()
   expiredAt: string
 }
+
+export type TokenDocument = Token & Document
+
 // SchemaFactory
 const tokenSchema = SchemaFactory.createForClass(Token)
 // Module

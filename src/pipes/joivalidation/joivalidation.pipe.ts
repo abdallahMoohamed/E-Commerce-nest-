@@ -1,4 +1,5 @@
 import { ArgumentMetadata, Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
+import { ObjectSchema } from 'joi';
 
 @Injectable()
 export class JoivalidationPipe implements PipeTransform {
@@ -7,8 +8,9 @@ export class JoivalidationPipe implements PipeTransform {
   transform (value: any, metadata: ArgumentMetadata) {
     if (this.schema[metadata.type]) {
       const validationResult = this.schema[metadata.type].validate(value, {
-        abortEarly: true
+        abort: false
       })
+
       if (validationResult.error)
         throw new BadRequestException(validationResult.error.details)
     }
